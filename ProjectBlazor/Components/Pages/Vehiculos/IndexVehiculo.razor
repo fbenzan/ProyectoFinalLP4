@@ -1,0 +1,224 @@
+﻿@rendermode InteractiveServer
+
+@using ProjectBlazor.Dto
+@page "/Listado Vehiculos"
+
+<div class="m-3">
+	<h3>Listado Vehiculos</h3>
+	<span class="btn btn-primary align-content-end" @onclick="btnAgregarClick">+</span>
+</div>
+@*Formulario de registrar vehiculo*@
+@if (ShowForm == true)
+{
+	@* Formularion de accion*@
+	<div class="card">
+		<h5 class="card-header">@Accion producto</h5>
+		<div class="card-body">
+			<div class="mb-3">
+				<label for="marca" class="form-label">Marca</label>
+				<input @bind-value="MiVehiculo.Marca" type="text" class="form-control" id="marca" placeholder="Marca" disabled="@DisableInputs">
+			</div>
+			<div class="mb-3">
+				<label for="modelo" class="form-label">Modelo</label>
+				<input @bind-value="MiVehiculo.Modelo" type="text" class="form-control" id="modelo" placeholder="Modelo" disabled="@DisableInputs">
+			</div>
+			<div class="mb-3">
+				<label for="matricula" class="form-label">Matricula</label>
+				<input @bind-value="MiVehiculo.Matricula" type="text" class="form-control" id="matricula" placeholder="Matricula" disabled="@DisableInputs">
+			</div>
+			<div class="mb-3">
+				<label for="placa" class="form-label">Placa</label>
+				<input @bind-value="MiVehiculo.NumeroPlaca" type="text" class="form-control" id="placa" placeholder="Placa" disabled="@DisableInputs">
+			</div>
+			<div class="mb-3">
+				<label for="tipo" class="form-label">Tipo</label>
+				<input @bind-value="MiVehiculo.Tipo" type="text" class="form-control" id="tipo" placeholder="Tipo" disabled="@DisableInputs">
+			</div>
+			<div class="mb-3">
+				<label for="estatus" class="form-label">Estatus</label>
+				<input @bind-value="MiVehiculo.Estatus " type="text" class="form-control" id="Estatus" placeholder="Estatus" disabled="@DisableInputs">
+			</div>
+
+			<div class="mb-3">
+				<label for="precio" class="form-label">Precio (RD$)</label>
+				<input @bind="MiVehiculo.Precio" type="text" class="form-control" id="precio" disabled="@DisableInputs"></input>
+			</div>
+			@if (Accion != Constants.Acciones.Ver)
+			{
+				<span class="btn btn-primary" @onclick="Aceptar">Aceptar</span>
+			}
+			<span class="btn btn-danger" @onclick="btnCancelarClick">@(Accion != Constants.Acciones.Ver ? "Cancelar" : "Salir")</span>
+		</div>
+	</div>
+
+}
+else
+{
+	@if (VehiculoList != null)
+	{
+		@* Formulario de los registros*@
+		<div class="card mb-3 mt-3">
+			<div class="card-header">
+				<span class="btn btn-success" @onclick="btnAgregarClick">+</span>
+			</div>
+			<div class="card-body">
+			</div>
+		</div>
+	}
+	else
+	{
+		<p>Cargando...</p>
+	}
+
+	@if (VehiculoList != null)
+	{
+
+
+		@if (VehiculoList.Count > 0)
+		{
+			<div class="container flex-column ">
+				@foreach (var v in VehiculoList)
+				{
+					@*Tarjeta de vehiculo*@
+
+
+					<div class="card m-3 text-black border border-primary mb-3 d-inline-flex" style="width: 18rem;">
+						<h5 class="card-title textcol-m-6 m-3">@v.Marca @v.Modelo</h5>
+						<div class="card- body m-3">
+
+
+							<p class="card-text">@v.NumeroPlaca</p>
+
+							<p class="card-text">@v.Estatus</p>
+
+							<div class="btn-group" role="group" aria-label="Basic mixed styles example">
+								<span @onclick="()=>btnEditarClick(v)" class="btn btn-outline-warning">Editar</span>
+								<span @onclick="()=>btnEliminarClick(v)" class="btn btn-outline-danger">Eliminar</span>
+								<span @onclick="()=>btnVerClick(v)" class="btn btn-outline-primary">Ver</span>
+							</div>
+							<a href="#" class="btn btn-primary">Rentar</a>
+						</div>
+					</div>
+
+
+				}
+			</div>
+		}
+	}
+}
+
+@code {
+
+
+	public void btnAgregarVehiculo()
+	{
+		ShowForm = true;
+	}
+	public void btnCancelar()
+	{
+		ShowForm = false;
+	}
+	public void btnGuardarVehiculo()
+	{
+
+		ShowForm = false;
+	}
+
+	#region Propiedades del componente Index.Razor
+	public List<VehiculoDto> Vehiculos { get; set; } = new();
+	public string Accion { get; set; } = "Registrar";
+	public VehiculoRequest MiVehiculo { get; set; } = new();
+
+	public List<VehiculoDto>? VehiculoList { get; set; }
+	bool ShowForm = false, DisableInputs = false;
+	#endregion Propiedades del componente Index.Razor
+
+	#region Metodos del ciclo de vida de la aplicacion (para este componente)
+	protected override async Task OnInitializedAsync()
+	{
+		await ConsultarVehiculos();
+		await Consultar();
+	}
+	#endregion Metodos del ciclo de vida de la aplicacion (para este componente)
+
+	#region Eventos
+	public void btnAgregarClick()
+	{
+		Accion = Constants.Acciones.Registrar;
+		ShowForm = true;
+		StateHasChanged();
+		DisableInputs = false;
+	}
+	public void btnEditarClick(VehiculoDto dto)
+	{
+		Accion = Constants.Acciones.Modificar;
+		ShowForm = true;
+		DisableInputs = false;
+		MiVehiculo = dto.ToRequest();
+	}
+	public void btnEliminarClick(VehiculoDto dto)
+	{
+		Accion = Constants.Acciones.Eliminar;
+		ShowForm = true;
+		DisableInputs = true;
+		MiVehiculo = dto.ToRequest();
+	}
+	public void btnVerClick(VehiculoDto dto)
+	{
+		Accion = Constants.Acciones.Ver;
+		ShowForm = true;
+		DisableInputs = true;
+		MiVehiculo = dto.ToRequest();
+	}
+	public void btnCancelarClick()
+	{
+		Limpiar();
+	}
+	#endregion Eventos
+
+	#region Métodos
+	async Task ConsultarVehiculos()
+	{
+		var result = await VehiculoService.Get();
+		if (result.Succesd)
+		{
+			Vehiculos =
+			result.Data?.ToList()
+			??
+			new List<VehiculoDto>();
+		}
+	}
+	async Task Consultar()
+	{
+		var result = await VehiculoService.Get();
+		if (result.Succesd)
+		{
+			VehiculoList =
+			result.Data?.ToList()
+			??
+			new List<VehiculoDto>();
+		}
+	}
+	public void Limpiar()
+	{
+		ShowForm = false;
+		MiVehiculo = new();
+	}
+	public async Task Aceptar()
+	{
+		Result r =
+		Accion == Constants.Acciones.Registrar ? await VehiculoService.Create(MiVehiculo) :
+		Accion == Constants.Acciones.Modificar ? await VehiculoService.Update(MiVehiculo) :
+		Accion == Constants.Acciones.Eliminar ? await VehiculoService.Delete(MiVehiculo.VehiculoId) :
+		Accion == Constants.Acciones.Ver ? Result.Success("") :
+		Result.Failure("Accion no soportada");
+		if (r.Succesd)
+		{
+			await Consultar();
+			Limpiar();
+		}
+	}
+	#endregion Métodos
+}
+
+
