@@ -1,0 +1,84 @@
+﻿@rendermode InteractiveServer
+@attribute [StreamRendering]
+@page "/listas"
+
+<h2>Mis listas</h2>
+
+@*Formulario de creacion de la lista*@
+@if (ShowForm)
+{
+    <div class="card">
+        <h5 class="card-header">Crear lista</h5>
+        <div class="card-body">
+            <div class="mb-2">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" placeholder="Nombre de la lista"/>
+            </div>
+
+            <span class="btn btn-info" @onclick="btnAceptar"> Registrar </span>
+            <span class="btn btn-danger" @onclick="btnCancelar"> Cancelar </span>
+        </div>
+    </div>
+}
+else
+{
+    @*Diseño exterior de las listas*@
+    <div class="mb-3">
+        @*Boton para crear listas*@
+        <div>
+            <span class="btn btn-outline-success" @onclick="btnRegistrar">Agregar lista</span>
+        </div>
+        <div>
+            <h3><span class="btn btn-outline-success" @onclick="btnVerLista">List 1</span></h3>
+            <h3><span class="btn btn-outline-success" @onclick="btnVerLista">List 2</span></h3>
+            <h3><span class="btn btn-outline-success" @onclick="btnVerLista">List 3</span></h3>
+        </div>
+    </div>
+
+
+    @if (ShowList)
+    {
+        @*Diseño interior de las listas (oculto)*@
+        <div>
+            <span class="btn btn-outline-dark" @onclick="btnVolver">Volver a las listas</span>
+            @*Botones para eliminar o editar la lista.*@
+            <div>
+                <h2>Nombre de la lista</h2>
+                <span class="btn btn-outline-warning">Editar lista</span>
+                <span class="btn btn-outline-danger">Eliminar lista</span>
+            </div>
+            @*Diseño de título agregado a la lista.*@
+            <div class="img-fluid" id="movie-info">
+                <img src="..." class="img-fluid" alt="...">
+            </div>
+        </div>
+    }
+}
+
+
+@code {
+    public bool ShowForm = false;
+    public bool ShowList = false;
+
+
+    public void btnRegistrar()
+    {
+        ShowForm = true;
+    }
+    public void btnAceptar()
+    {
+        ShowForm = false;
+    }
+    public void btnCancelar()
+    {
+        ShowForm = false;
+    }
+    public void btnVolver()
+    {
+        ShowList = false;
+    }
+    private void btnVerLista()
+    {
+        ShowList = true;
+    }
+}
