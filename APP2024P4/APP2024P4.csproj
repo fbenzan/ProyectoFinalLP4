@@ -14,4 +14,12 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Pages\Admin\Categorias\" />
+    <Folder Include="Components\Pages\Admin\Marcas\" />
+    <Folder Include="Components\Pages\Admin\Modelos\" />
+    <Folder Include="Components\Pages\Admin\Usuarios\" />
+    <Folder Include="Components\Pages\Admin\Productos\" />
+  </ItemGroup>
+
 </Project>
