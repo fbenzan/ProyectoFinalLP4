@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <None Remove="Components\Pages\Admin\IndexAdmin.razor.css" />
+    <None Remove="Components\Pages\Admin\Productos\IndexProductos.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Components\Pages\Admin\IndexAdmin.razor.css" />
+    <Content Include="Components\Pages\Admin\Productos\IndexProductos.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +29,6 @@
     <Folder Include="Components\Pages\Admin\Marcas\" />
     <Folder Include="Components\Pages\Admin\Modelos\" />
     <Folder Include="Components\Pages\Admin\Usuarios\" />
-    <Folder Include="Components\Pages\Admin\Productos\" />
   </ItemGroup>
 
 </Project>
