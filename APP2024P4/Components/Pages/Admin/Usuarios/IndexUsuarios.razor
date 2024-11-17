@@ -1,6 +1,6 @@
 ﻿@rendermode InteractiveServer
 @attribute [StreamRendering]
-@page "/modelos"
+@page "/usuarios"
 @* @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize] *@
 
@@ -8,20 +8,19 @@
 {
     @* Formularion de accion*@
     <div class="card">
-        <h5 class="card-header">@Accion Modelo</h5>
+        <h5 class="card-header">@Accion Usuario</h5>
         <div class="card-body">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="nombre" placeholder="Nombre">
             </div>
             <div class="mb-3">
-                <label for="marca" class="form-label">Marca</label>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Selecciona la marca</option>
-                    <option value="1">Samsung</option>
-                    <option value="2">Apple</option>
-                    <option value="3">Huawei</option>
-                </select>
+                <label for="contrasena" class="form-label">Contraseña</label>
+                <input type="text" class="form-control" id="contrasena" placeholder="Contraseña">
+            </div>
+            <div class="mb-3">
+                <label for="cargo" class="form-label">Cargo</label>
+                <input type="text" class="form-control" id="cargo" placeholder="Cargo">
             </div>
             <span class="btn btn-primary">Aceptar</span>
             <span class="btn btn-danger" @onclick="btnCancelarClick">Cancelar</span>
@@ -33,7 +32,7 @@ else
     @* Formularion de los registros*@
     <div class="card mb-3 mt-3">
         <div class="card-header">
-            <span class="btn btn-success" @onclick="btnAgregarClick">Agregar Modelo</span>
+            <span class="btn btn-success" @onclick="btnAgregarClick">Agregar Usuario</span>
         </div>
         <div class="card-body">
             <table class="table">
@@ -41,15 +40,17 @@ else
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nombre</th>
-                        <th scope="col">Modelo</th>
+                        <th scope="col">Contraseña</th>
+                        <th scope="col">Cargo</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th scope="row">1</th>
-                        <td>S22 Ultra</td>
-                        <td>Sangsum</td>
+                        <td>Wilmer Geraldo Reyes</td>
+                        <td>********</td>
+                        <td>Administrador</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                 <span @onclick="btnEditarClick" class="btn btn-outline-warning">Editar</span>
