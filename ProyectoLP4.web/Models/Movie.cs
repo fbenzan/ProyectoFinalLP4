@@ -1,5 +1,8 @@
-﻿namespace ProyectoLP4.web.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ProyectoLP4.web.Models
 {
+    [Table("Titulos")]
     public class Movie
     {
         public int Id { get; set; }
