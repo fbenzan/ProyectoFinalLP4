@@ -3,10 +3,10 @@
 @using ProjectBlazor.Dto
 @page "/Listado Vehiculos"
 
-<div class="m-3">
-	<h3>Listado Vehiculos</h3>
-	<span class="btn btn-primary align-content-end" @onclick="btnAgregarClick">+</span>
-</div>
+
+<h3>Listado Vehiculos</h3>
+	
+
 @*Formulario de registrar vehiculo*@
 @if (ShowForm == true)
 {
@@ -56,32 +56,13 @@ else
 {
 	@if (VehiculoList != null)
 	{
-		@* Formulario de los registros*@
-		<div class="card mb-3 mt-3">
-			<div class="card-header">
-				<span class="btn btn-success" @onclick="btnAgregarClick">+</span>
-			</div>
-			<div class="card-body">
-			</div>
-		</div>
-	}
-	else
-	{
-		<p>Cargando...</p>
-	}
-
-	@if (VehiculoList != null)
-	{
-
-
 		@if (VehiculoList.Count > 0)
 		{
 			<div class="container flex-column ">
+				<span class="btn btn-primary align-content-end" @onclick="btnAgregarClick">+</span>
 				@foreach (var v in VehiculoList)
-				{
-					@*Tarjeta de vehiculo*@
-
-
+					{
+						@*Tarjeta de vehiculo*@
 					<div class="card m-3 text-black border border-primary mb-3 d-inline-flex" style="width: 18rem;">
 						<h5 class="card-title textcol-m-6 m-3">@v.Marca @v.Modelo</h5>
 						<div class="card- body m-3">
