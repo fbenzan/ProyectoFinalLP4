@@ -7,6 +7,7 @@
 @if (ShowForm)
 {
     @* Formularion de accion*@
+    <a @onclick="btnCancelarClick" class="btn btn-outline-primary " type="button">Atras</a>
     <div class="card">
         <h5 class="card-header">@Accion Modelo</h5>
         <div class="card-body">
@@ -31,6 +32,7 @@
 else
 {
     @* Formularion de los registros*@
+    <a href="/admin" class="btn btn-outline-primary " type="button">⬅️ Volver</a>
     <div class="card mb-3 mt-3">
         <div class="card-header">
             <span class="btn btn-success" @onclick="btnAgregarClick">Agregar Modelo</span>
