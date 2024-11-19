@@ -15,12 +15,13 @@ public class Vehiculo
 	public string? Matricula { get; set; }
 	public string? NumeroPlaca { get; set; }
 	public string? Tipo { get; set; }
+	public string? Year { get; set; }
 	public string? Estatus { get; set; }
 	[Column(TypeName = "decimal(18,6)")]
 	public decimal Precio { get; set; } = 0;
 
 
-	public static Vehiculo Create(string marca, string? modelo, string? matricula, string? numeroPlaca, string? tipo, string? estatus, decimal precio = 0)
+	public static Vehiculo Create(string marca, string? modelo, string? matricula, string? numeroPlaca, string? tipo, string? year, string? estatus, decimal precio = 0)
 		=> new()
 		{
 			Marca = marca,
@@ -28,10 +29,11 @@ public class Vehiculo
 			Matricula = matricula,
 			NumeroPlaca = numeroPlaca,
 			Tipo = tipo,
+			Year = year,
 			Estatus = estatus,
 			Precio = precio
 		};
-	public bool Update(string marca, string? modelo, string? matricula, string? numeroPlaca, string? tipo, string? estatus, decimal precio = 0)
+	public bool Update(string marca, string? modelo, string? matricula, string? numeroPlaca, string? tipo, string? year, string? estatus, decimal precio = 0)
 	{
 		var save = false;
 		if (Marca != marca)
@@ -59,7 +61,12 @@ public class Vehiculo
 			Tipo = tipo;
 			save = true;
 		}
-		if (Estatus != estatus)
+        if (Year != year)
+        {
+            Year = year;
+            save = true;
+        }
+        if (Estatus != estatus)
 		{
 			Estatus = Estatus;
 			save = true;

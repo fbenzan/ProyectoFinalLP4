@@ -26,7 +26,7 @@ namespace ProjectBlazor.Services
 		{
 			try
 			{
-				var entity = Vehiculo.Create(vehiculo.Marca, vehiculo.Modelo, vehiculo.Matricula, vehiculo.NumeroPlaca, vehiculo.Tipo, vehiculo.Estatus, vehiculo.Precio);
+				var entity = Vehiculo.Create(vehiculo.Marca, vehiculo.Modelo, vehiculo.Matricula, vehiculo.NumeroPlaca, vehiculo.Tipo, vehiculo.Year, vehiculo.Estatus, vehiculo.Precio);
 				dbContext.Vehiculos.Add(entity);
 				await dbContext.SaveChangesAsync();
 				return Result.Success("✅Vehiculo registrado con exito!");
@@ -43,7 +43,7 @@ namespace ProjectBlazor.Services
 				var entity = dbContext.Vehiculos.Where(v => v.VehiculoId == vehiculo.VehiculoId).FirstOrDefault();
 				if (entity == null)
 					return Result.Failure($"El vehiculo '{vehiculo.VehiculoId}' no existe!");
-				if (entity.Update(vehiculo.Marca, vehiculo.Modelo, vehiculo.Matricula, vehiculo.NumeroPlaca, vehiculo.Tipo, vehiculo.Estatus, vehiculo.Precio))
+				if (entity.Update(vehiculo.Marca, vehiculo.Modelo, vehiculo.Matricula, vehiculo.NumeroPlaca, vehiculo.Tipo, vehiculo.Year, vehiculo.Estatus, vehiculo.Precio))
 				{
 					await dbContext.SaveChangesAsync();
 					return Result.Success("✅Vehiculo modificado con exito!");
@@ -76,7 +76,7 @@ namespace ProjectBlazor.Services
 			try
 			{
 				var entity = await dbContext.Vehiculos.Where(v => v.VehiculoId == VehiculoId)
-					.Select(v => new VehiculoDto(v.VehiculoId, v.Marca, v.Modelo, v.Matricula, v.NumeroPlaca, v.Tipo, v.Estatus, v.Precio))
+					.Select(v => new VehiculoDto(v.VehiculoId, v.Marca, v.Modelo, v.Matricula, v.NumeroPlaca, v.Tipo, v.Year, v.Estatus, v.Precio))
 					.FirstOrDefaultAsync();
 				if (entity == null)
 					return Result<VehiculoDto>.Failure($"El producto '{VehiculoId}' no existe!");
@@ -94,7 +94,7 @@ namespace ProjectBlazor.Services
 			{
 				var entities = await dbContext.Vehiculos
 					.Where(v => v.Marca.ToLower().Contains(filtro.ToLower()))
-					.Select(v => new VehiculoDto(v.VehiculoId, v.Marca, v.Modelo, v.Matricula, v.NumeroPlaca, v.Tipo, v.Estatus, v.Precio))
+					.Select(v => new VehiculoDto(v.VehiculoId, v.Marca, v.Modelo, v.Matricula, v.NumeroPlaca, v.Tipo, v.Year, v.Estatus, v.Precio))
 					.ToListAsync();
 				return ResultList<VehiculoDto>.Success(entities);
 			}
