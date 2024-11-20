@@ -1,28 +1,33 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using ProyectoLP4.web.Models;
 
-public class TMDbservice
+public class TMDbservice : ITMDbservice
 {
     private readonly HttpClient _httpClient;
-    private readonly string _apiKey;
+    private const string ApiKey = "f080810985003cec1aeef1e10d5ce41b";
+    private const string BaseUrl = "https://api.themoviedb.org/3/";
 
-    public TMDbservice(HttpClient httpClient, IConfiguration configuration)
+    public TMDbservice(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _apiKey = configuration["TMDbApiKey"];
     }
 
-    public async Task<dynamic> BuscarPeliculasAsync(string query)
+    public async Task<List<Movie>> BuscarPeliculasAsync(string query)
     {
-        var respuesta = await _httpClient.GetStringAsync($"https://api.themoviedb.org/3/search/movie?api_key={_apiKey}&query={query}");
-        return JsonSerializer.Deserialize<dynamic>(respuesta);
-    }
+        var respuesta = await _httpClient.GetAsync($"{BaseUrl}search/movie?api_key={ApiKey}&query={Uri.EscapeDataString(query)}");
+        respuesta.EnsureSuccessStatusCode();
 
-    public async Task<dynamic> GetMovieDetailAsync(int movieId)
-    {
-        var respuesta = await _httpClient.GetStringAsync($"https://api.themoviedb.org/3/movie/{movieId}?api_key={_apiKey}");
-        return JsonSerializer.Deserialize<dynamic>(respuesta);
+        var json = await respuesta.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<TMDbSearchResult>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return result?.Results ?? new List<Movie>();
     }
+}
+
+public class TMDbSearchResult
+{
+    public List<Movie> Results { get; set; }
 }

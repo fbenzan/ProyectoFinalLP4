@@ -1,78 +1,119 @@
 ﻿@rendermode InteractiveServer
 @attribute [StreamRendering]
 @page "/listas"
+@inject ListService Listservice
 @using ProyectoLP4.web.Models
 
 <h2>Mis listas</h2>
 
-@*Formulario de creacion de la lista*@
-@if (ShowForm)
+@if (ShowOld)
 {
-    <div class="card">
-        <h5 class="card-header">Crear lista</h5>
-        <div class="card-body">
-            <div class="mb-2">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="nombre" placeholder="Nombre de la lista" />
-            </div>
-
-            <span class="btn btn-info" @onclick="btnAceptar"> Registrar </span>
-            <span class="btn btn-danger" @onclick="btnCancelar"> Cancelar </span>
-        </div>
-    </div>
-}
-else
-{
-    @*Diseño exterior de las listas*@
-    <div class="mb-3 d-flex  mb-3 justify-content-evenly">
-        @*Boton para crear listas*@
-        <div>
-            <span class="btn btn-outline-success" @onclick="btnRegistrar">Agregar lista</span>
-        </div>
-        <div>
-            @foreach (var list in ListasDisponibles)
-            {
-                @if (CurrentList.Id == list.Id)
-                {
-                    <span class="btn btn-dark ms-2" @onclick="()=>btnVerLista(list)">@list.Nombre</span>
-                }
-                else
-                {
-                    <span class="btn btn-outline-dark ms-2" @onclick="()=>btnVerLista(list)">@list.Nombre</span>
-                }
-            }
-        </div>
-    </div>
-
-
-    @if (ShowList)
+    @*Formulario de creacion de la lista*@
+    @if (ShowForm)
     {
-        @*Diseño interior de las listas (oculto)*@
-        <divc class="p-3">
-            @* <span class="btn btn-outline-dark" @onclick="btnVolver">Volver a las listas</span> *@
-            @*Botones para eliminar o editar la lista.*@
-            <div class="m-1 shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-                <h2>@CurrentList.Nombre</h2>
-                <span class="btn btn-outline-warning">Editar lista</span>
-                <span class="btn btn-outline-danger">Eliminar lista</span>
-            </div>
-            @*Diseño de título agregado a la lista.*@
-            @foreach (var movie in CurrentList.Movies)
-            {
-                <div class="card border-0 mb-2 shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-                    <div class="card-header">@movie.Titulo</div>
-                    <div class="card-body"> @movie.Descripcion </div>
+        <div class="card">
+            <h5 class="card-header">Crear lista</h5>
+            <div class="card-body">
+                <div class="mb-2">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" placeholder="Nombre de la lista" />
                 </div>
-            }
-        </divc>
+
+                @*<span class="btn btn-info" @onclick="btnAceptar"> Registrar </span>
+                <span class="btn btn-danger" @onclick="btnCancelar"> Cancelar </span>*@
+            </div>
+        </div>
+    }
+    else
+    {
+        @*Diseño exterior de las listas*@
+        <div class="mb-3 d-flex  mb-3 justify-content-evenly">
+            @*Boton para crear listas*@
+            <div>
+                @*<span class="btn btn-outline-success" @onclick="btnRegistrar">Agregar lista</span>*@
+            </div>
+            <div>
+                @*@foreach (var list in ListasDisponibles)
+                {
+                    @if (CurrentList.Id == list.Id)
+                    {
+                        <span class="btn btn-dark ms-2" @onclick="()=>btnVerLista(list)">@list.Nombre</span>
+                    }
+                    else
+                    {
+                        <span class="btn btn-outline-dark ms-2" @onclick="()=>btnVerLista(list)">@list.Nombre</span>
+                    }
+                }*@
+            </div>
+        </div>
+
+
+        @if (ShowList)
+        {
+            @*Diseño interior de las listas (oculto)*@
+            <divc class="p-3">
+                @* <span class="btn btn-outline-dark" @onclick="btnVolver">Volver a las listas</span> *@
+                @*Botones para eliminar o editar la lista.*@
+                @*<div class="m-1 shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                    <h2>@CurrentList.Nombre</h2>
+                    <span class="btn btn-outline-warning">Editar lista</span>
+                    <span class="btn btn-outline-danger">Eliminar lista</span>
+                </div>*@
+                @*Diseño de título agregado a la lista.*@
+                @*@foreach (var movie in CurrentList.Movies)
+                {
+                    <div class="card border-0 mb-2 shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+                        <div class="card-header">@movie.Titulo</div>
+                        <div class="card-body"> @movie.Overview </div>
+                    </div>
+                }*@
+            </divc>
+        }
     }
 }
 
 
+<input @bind="NuevaLista" type="text" placeholder="Nombre de la lista" class="form-control"/>
+<span @onclick="CrearLista" class="btn btn-outline-success mt-2">Crear Lista</span>
+
+@if (Lists != null && Lists.Any())
+{
+    <ul>
+        @foreach (var list in Lists)
+        {
+            <li>
+                @list.Nombre (@list.Movies.Count Peliculas/series)
+            </li>
+        }
+    </ul>
+}
+
 @code {
     public bool ShowForm = false;
     public bool ShowList = false;
-    // simula la lista que estan en la base de datos
+    public bool ShowOld = false;
+
+
+    private string NuevaLista;
+    private List<UserList> Lists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Lists = await Listservice.GetListsAsync();
+    }
+
+    private async Task CrearLista()
+    {
+        if (!string.IsNullOrWhiteSpace(NuevaLista))
+        {
+            await Listservice.CrearListaAsync(NuevaLista);
+            NuevaLista = string.Empty;
+            Lists = await Listservice.GetListsAsync();
+        }
+    }
+
+    #region OldCode
+    @*// simula la lista que estan en la base de datos
     public List<UserList> ListasDisponibles { get; set; } = new()
      {
             new UserList
@@ -81,9 +122,9 @@ else
                 Nombre = "Acción",
                 Movies = new List<Movie>
                 {
-                    new Movie { Id = 1, Titulo = "Mad Max: Fury Road", Descripcion = "Futuro post-apocalíptico lleno de acción y persecuciones", TMBdId = 12345 },
-                    new Movie { Id = 2, Titulo = "Die Hard", Descripcion = "Un oficial de policía lucha contra terroristas en un rascacielos", TMBdId = 23456 },
-                    new Movie { Id = 3, Titulo = "John Wick", Descripcion = "Un exasesino que busca venganza", TMBdId = 34567 }
+                    new Movie { Id = 1, Titulo = "Mad Max: Fury Road", Overview = "Futuro post-apocalíptico lleno de acción y persecuciones", TMDbId = 12345 },
+                    new Movie { Id = 2, Titulo = "Die Hard", Overview = "Un oficial de policía lucha contra terroristas en un rascacielos", TMDbId = 23456 },
+                    new Movie { Id = 3, Titulo = "John Wick", Overview = "Un exasesino que busca venganza", TMDbId = 34567 }
                 }
             },
             new UserList
@@ -92,9 +133,9 @@ else
                 Nombre = "Diversión",
                 Movies = new List<Movie>
                 {
-                    new Movie { Id = 4, Titulo = "The Hangover", Descripcion = "Un grupo de amigos intentan recordar lo que ocurrió durante una fiesta en Las Vegas", TMBdId = 45678 },
-                    new Movie { Id = 5, Titulo = "Superbad", Descripcion = "Dos adolescentes viven una serie de cómicas situaciones antes de graduarse de la secundaria", TMBdId = 56789 },
-                    new Movie { Id = 6, Titulo = "21 Jump Street", Descripcion = "Dos oficiales encubiertos deben infiltrarse en una escuela secundaria", TMBdId = 67890 }
+                    new Movie { Id = 4, Titulo = "The Hangover", Overview = "Un grupo de amigos intentan recordar lo que ocurrió durante una fiesta en Las Vegas", TMDbId = 45678 },
+                    new Movie { Id = 5, Titulo = "Superbad", Overview = "Dos adolescentes viven una serie de cómicas situaciones antes de graduarse de la secundaria", TMDbId = 56789 },
+                    new Movie { Id = 6, Titulo = "21 Jump Street", Overview = "Dos oficiales encubiertos deben infiltrarse en una escuela secundaria", TMDbId = 67890 }
                 }
             },
             new UserList
@@ -103,14 +144,15 @@ else
                 Nombre = "Aventura",
                 Movies = new List<Movie>
                 {
-                    new Movie { Id = 7, Titulo = "Indiana Jones and the Raiders of the Lost Ark", Descripcion = "Un arqueólogo se embarca en una peligrosa aventura para encontrar el Arca Perdida", TMBdId = 78901 },
-                    new Movie { Id = 8, Titulo = "The Lord of the Rings: The Fellowship of the Ring", Descripcion = "Un grupo de héroes debe destruir un anillo mágico para salvar el mundo", TMBdId = 89012 },
-                    new Movie { Id = 9, Titulo = "Pirates of the Caribbean: The Curse of the Black Pearl", Descripcion = "Un capitán pirata busca una antigua maldición mientras navega por el Caribe", TMBdId = 90123 }
+                    new Movie { Id = 7, Titulo = "Indiana Jones and the Raiders of the Lost Ark", Overview = "Un arqueólogo se embarca en una peligrosa aventura para encontrar el Arca Perdida", TMDbId = 78901 },
+                    new Movie { Id = 8, Titulo = "The Lord of the Rings: The Fellowship of the Ring", Overview = "Un grupo de héroes debe destruir un anillo mágico para salvar el mundo", TMDbId = 89012 },
+                    new Movie { Id = 9, Titulo = "Pirates of the Caribbean: The Curse of the Black Pearl", Overview = "Un capitán pirata busca una antigua maldición mientras navega por el Caribe", TMDbId = 90123 }
                 }
             }
-     };
-
-    public UserList CurrentList { get; set; } = new();
+     }; 
+     
+     
+     public UserList CurrentList { get; set; } = new();
 
     public void btnRegistrar()
     {
@@ -132,5 +174,6 @@ else
     {
         ShowList = true;
         CurrentList = list;
-    }
+    }*@
+    #endregion
 }

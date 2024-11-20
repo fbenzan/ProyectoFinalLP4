@@ -1,11 +1,56 @@
 ﻿@page "/buscar"
+@inject TMDbservice Tmdbservice
+@using ProyectoLP4.web.Models;
 
 <h2>Buscar</h2>
 
-<div>
-    <input type="text" class="form-control" placeholder="Busque una pelicula o serie">
-</div>
+
+<input type="text" @bind="SearchQuery" class="form-control" placeholder="Busque una pelicula o serie"/>
+<span class="btn btn-outline-primary mt-2" @onclick="BuscarPeliculas">Buscar</span>
+
+@if (IsLoading)
+{
+    <p>Cargando...</p>
+}
+else if (Movies != null && Movies.Any())
+{
+    <ul>
+        @foreach (var movie in Movies)
+        {
+            <li>
+                <a @onclick="() => MostrarDetalles(movie)">@movie.Titulo</a>
+            </li>
+        }
+    </ul>
+}
+
+@if (TituloSeleccionado != null)
+{
+    <h4>@TituloSeleccionado.Titulo</h4>
+    <p>@TituloSeleccionado.Overview</p>
+    <span class="btn btn-success" @onclick="AgregarALista">Agregar a una lista</span>
+}
 
 @code {
-    
+    private string SearchQuery;
+    private bool IsLoading;
+    private List<Movie> Movies;
+    private Movie TituloSeleccionado;
+
+    private async Task BuscarPeliculas()
+    {
+        IsLoading = true;
+        Movies = await Tmdbservice.BuscarPeliculasAsync(SearchQuery);
+        IsLoading = false;
+    }
+
+    private void MostrarDetalles(Movie movie)
+    {
+        TituloSeleccionado = movie;
+    }
+
+    private void AgregarALista()
+    {
+        
+    }
 }

@@ -6,40 +6,67 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 
-public class ListService
+public class ListService : IListService
 {
-    private readonly ApplicationDbContext _context;
-    
-    public ListService(ApplicationDbContext context)
+    //**SEGUNDA PRUEBA**
+
+    private readonly List<UserList> _userLists = new();
+
+    public Task<List<UserList>> GetListsAsync()
     {
-        _context = context;
+        return Task.FromResult(_userLists);
     }
 
-    //Para obtener las listas
-    public async Task<List<UserList>> GetAllListsAsync()
+    public Task CrearListaAsync(string nombre)
     {
-        return await _context.UserLists.Include(ul => ul.Movies).ToListAsync();
+        _userLists.Add(new UserList { Nombre = nombre });
+        return Task.CompletedTask;
     }
 
-    //Para crear listas
-    public async Task CrearListaAsync (string listName)
+    public Task AgregarTituloAListaAsync(int listaId, Movie movie)
     {
-        if(string.IsNullOrEmpty(listName))
-        {
-            var newList = new UserList { Nombre = listName };
-            _context.UserLists.Add(newList);
-            await _context.SaveChangesAsync();
-        }
-    }
-
-    //Función para agregar un título a una lista
-    public async Task AgregarTituloALista(int listID, Movie movie)
-    {
-        var lista = await _context.UserLists.FindAsync(listID);
+        var lista = _userLists.Find(l => l.Id == listaId);
         if (lista != null)
         {
             lista.Movies.Add(movie);
-            await _context.SaveChangesAsync();
         }
+        return Task.CompletedTask;
     }
+
+    //**PRIMERA PRUEBA**
+
+    //private readonly ApplicationDbContext _context;
+
+    //public ListService(ApplicationDbContext context)
+    //{
+    //_context = context;
+    //}
+
+    //Para obtener las listas
+    //public async Task<List<UserList>> GetAllListsAsync()
+    //{
+    //return await _context.UserLists.Include(ul => ul.Movies).ToListAsync();
+    //}
+
+    //Para crear listas
+    //public async Task CrearListaAsync (string listName)
+    //{
+    //if(string.IsNullOrEmpty(listName))
+    //{
+    //var newList = new UserList { Nombre = listName };
+    //_context.UserLists.Add(newList);
+    //await _context.SaveChangesAsync();
+    //}
+    //}
+
+    //Función para agregar un título a una lista
+    //public async Task AgregarTituloALista(int listID, Movie movie)
+    //{
+    //var lista = await _context.UserLists.FindAsync(listID);
+    //if (lista != null)
+    //{
+    //lista.Movies.Add(movie);
+    //await _context.SaveChangesAsync();
+    //}
+    //}
 }

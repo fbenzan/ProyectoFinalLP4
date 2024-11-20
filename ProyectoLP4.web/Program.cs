@@ -34,7 +34,10 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<TMDbservice>();
+builder.Services.AddSingleton<ListService>();
+builder.Services.AddScoped<ITMDbservice, TMDbservice>();
+builder.Services.AddScoped<IListService, ListService>();
 
 var app = builder.Build();
 
