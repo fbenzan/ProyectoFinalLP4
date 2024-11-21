@@ -1,40 +1,44 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
+   
     <main>
-        <nav class="top-row px-4 @themeWhite ">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Active</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <nav class="@Black">
+            <div class="container-xl">
+                <!-- Logo -->
+                <a class="navbar-brand" href="">
+                   <h1>Grocery Store</h1>
+                </a>
+                <!-- Collapse -->
+                <div class="collapse navbar-collapse">
+                    <!-- Nav -->
+                    <div class="navbar-nav mx-lg-auto">
+                        <a class="nav-item nav-link active" href="inicio" aria-current="page">Home</a>
+                        <a class="nav-item nav-link" href="#">Product</a>
+                        <a class="nav-item nav-link" href="#">Features</a>
+                        <a class="nav-item nav-link" href="#">Pricing</a>
+
+                    </div>
+                    <form class="d-flex align-items-lg-center mt-3 mt-lg-0" role="search">
+                        <input class="form-control align-items-lg-center mt-3 mt-lg-0" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
+
+                    <!-- Right navigation -->
+                    <div class="navbar-nav ms-lg-4">
+                        <a class="nav-item nav-link" href="Account/Login">Sign in</a>
+                    </div>
+                    <!-- Action -->
+                    <div class="d-flex align-items-lg-center mt-3 mt-lg-0">
+                        <a href="Account/Register" class="btn btn-sm btn-primary w-full w-lg-auto">
+                            Register
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </nav>
-
         <article class="content px-4">
             @Body
         </article>
@@ -49,6 +53,7 @@
 </div>
 
 @code {
-    string themeWhite = "navbar navbar-expand-lg bg-body-tertiary";
+    string themeWhite = "navbar navbar-expand-lg navbar-light bg-light px-0 py-3";
+    string Black = "navbar navbar-expand-lg navbar-dark bg-dark px-0 py-3";
 
 }
