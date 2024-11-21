@@ -2,7 +2,8 @@
 
 public interface IListService
 {
-    Task AgregarTituloAListaAsync(int listaId, Movie movie);
+    Task AddMovieToListAsync(int listaId, Movie movie);
     Task CrearListaAsync(string nombre);
+    Task<UserList> GetListByIdAsync(int listaId);
     Task<List<UserList>> GetListsAsync();
 }

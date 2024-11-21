@@ -19,18 +19,27 @@ public class ListService : IListService
 
     public Task CrearListaAsync(string nombre)
     {
-        _userLists.Add(new UserList { Nombre = nombre });
+        _userLists.Add(new UserList { Name = nombre });
         return Task.CompletedTask;
     }
 
-    public Task AgregarTituloAListaAsync(int listaId, Movie movie)
+    public Task AddMovieToListAsync(int listaId, Movie movie)
     {
         var lista = _userLists.Find(l => l.Id == listaId);
         if (lista != null)
         {
-            lista.Movies.Add(movie);
+            if (!lista.Movies.Any(m => m.Id == movie.Id))
+            {
+                lista.Movies.Add(movie);
+            }
         }
         return Task.CompletedTask;
+    }
+
+    public Task<UserList> GetListByIdAsync(int listaId)
+    {
+        var list = _userLists.Find(l =>l.Id == listaId);
+        return Task.FromResult(list);
     }
 
     //**PRIMERA PRUEBA**

@@ -1,7 +1,6 @@
 ﻿@rendermode InteractiveServer
 @attribute [StreamRendering]
 @page "/listas"
-@inject ListService Listservice
 @using ProyectoLP4.web.Models
 
 <h2>Mis listas</h2>
@@ -82,7 +81,7 @@
         @foreach (var list in Lists)
         {
             <li>
-                @list.Nombre (@list.Movies.Count Peliculas/series)
+                @list.Name (@list.Movies.Count Peliculas/series)
             </li>
         }
     </ul>
@@ -99,16 +98,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Lists = await Listservice.GetListsAsync();
+        Lists = await ListService.GetListsAsync();
     }
 
     private async Task CrearLista()
     {
         if (!string.IsNullOrWhiteSpace(NuevaLista))
         {
-            await Listservice.CrearListaAsync(NuevaLista);
+            await ListService.CrearListaAsync(NuevaLista);
             NuevaLista = string.Empty;
-            Lists = await Listservice.GetListsAsync();
+            Lists = await ListService.GetListsAsync();
         }
     }
 

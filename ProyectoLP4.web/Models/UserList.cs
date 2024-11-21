@@ -10,7 +10,7 @@ namespace ProyectoLP4.web.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public string Nombre { get; set; }
+        public string Name { get; set; }
         public List<Movie> Movies { get; set; } = new();
     }
 }

@@ -2,5 +2,5 @@
 
 public interface ITMDbservice
 {
-    Task<List<Movie>> BuscarPeliculasAsync(string query);
+    Task<List<Movie>> SearchTitlesAsync(string query);
 }

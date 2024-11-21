@@ -7,6 +7,10 @@ using ProyectoLP4.web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -34,10 +38,11 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-builder.Services.AddHttpClient<TMDbservice>();
+builder.Services.AddHttpClient<TMDbService>();
 builder.Services.AddSingleton<ListService>();
-builder.Services.AddScoped<ITMDbservice, TMDbservice>();
+builder.Services.AddScoped<ITMDbservice, TMDbService>();
 builder.Services.AddScoped<IListService, ListService>();
+builder.Services.AddScoped<TMDbService>();
 
 var app = builder.Build();
 
