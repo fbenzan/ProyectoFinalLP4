@@ -9,6 +9,7 @@ public interface IClientesRepository
     Task<ClienteDto> Buscar(int Id);
     Task<List<ClienteDto>> Consultar(string filtro);
     Task<ClienteDto> Crear(ClienteRequestDto request);
+    Task<bool> Eliminar(int Id);
     Task<ClienteDto> Update(ClienteRequestDto request);
 }
 
@@ -52,9 +53,9 @@ public class ClientesRepository(IApplicationDbContext db) : IClientesRepository
         var clientes = await db.Clientes//Representa la tabla clientes en base de datos
             .AsNoTracking()//Aseguramos que la data a traer no sea vigilada para aplicar cambios.
             .Where(cliente =>
-            cliente.Nombre.ToLowerInvariant().Contains(filtro) ||
-            cliente.Apellido.ToLowerInvariant().Contains(filtro) ||
-            cliente.Telefono.ToLowerInvariant().Contains(filtro)) //Donde el nombre o apellido o telefono coincidan con el requerido
+            cliente.Nombre.ToLower().Contains(filtro) ||
+            cliente.Apellido.ToLower().Contains(filtro) ||
+            cliente.Telefono.ToLower().Contains(filtro)) //Donde el nombre o apellido o telefono coincidan con el requerido
             .Select(cliente => cliente.ToDto()) //Convertimos cada registro a la data envuelta separada de la memoria de EF Core.
             .ToListAsync()//Se obtienen
             .ConfigureAwait(false);
@@ -73,5 +74,19 @@ public class ClientesRepository(IApplicationDbContext db) : IClientesRepository
             throw new Exception($"El cliente '{Id}' no exite en la base de datos");
 
         return cliente;
+    }
+    public async Task<bool> Eliminar(int Id)
+    {
+        var cliente = await db.Clientes//Representa la tabla clientes en base de datos
+            .Where(cliente => cliente.Id == Id)//Donde el campo Id sea igual al Id solicitado.
+            .FirstOrDefaultAsync()//Solo tomamos el primero encontrado de forma asincrona.
+            .ConfigureAwait(false);
+
+        if (cliente == null) //Si la variable es nula, detonamos un error de aplicacion.
+            throw new Exception($"El cliente '{Id}' no exite en la base de datos");
+
+        db.Clientes.Remove(cliente);
+        await db.SaveChangesAsync().ConfigureAwait(false);
+        return true;
     }
 }

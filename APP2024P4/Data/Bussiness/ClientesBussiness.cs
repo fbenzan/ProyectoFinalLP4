@@ -9,6 +9,7 @@ public interface IClientesBussiness
     Task<ClienteDto> Buscar(int Id);
     Task<List<ClienteDto>> Consultar(string filtro);
     Task<ClienteDto> Crear(ClienteRequestDto request);
+    Task<bool> Eliminar(int Id);
     Task<ClienteDto> Update(ClienteRequestDto request);
 }
 public class ClientesBussiness(IClientesRepository repository) : IClientesBussiness
@@ -24,4 +25,6 @@ public class ClientesBussiness(IClientesRepository repository) : IClientesBussin
 
     public async Task<ClienteDto> Buscar(int Id)
      => await repository.Buscar(Id).ConfigureAwait(false);
+    public async Task<bool> Eliminar(int Id)
+     => await repository.Eliminar(Id).ConfigureAwait(false);
 }
