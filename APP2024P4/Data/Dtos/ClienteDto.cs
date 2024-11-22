@@ -23,10 +23,10 @@ public class ClienteRequestDto: IClienteRequest
 }
 public interface IClienteRequest
 {
-    [Required(ErrorMessage = "El nombre es requerido")]
+    [Required(ErrorMessage = "El Nombre es requerido")]
     public string Nombre { get; set; }
     [Required(ErrorMessage = "El Apellido es requerido")]
     public string Apellido { get; set; }
-    [Required(ErrorMessage = "El télefono es requerido"), Phone]
+    [Required(ErrorMessage = "El Télefono es requerido"), Phone]
     public string Telefono { get; set; }
 }

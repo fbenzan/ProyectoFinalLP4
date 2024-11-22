@@ -6,18 +6,18 @@
 <!-- Buscador -->
 <div class="mb-3">
     <div class="input-group has-validation">
-      <div class="form-floating is-invalid">
+        <div class="form-floating is-invalid">
             <input id="filtro" class="form-control" @bind="Filtro" placeholder="Ingrese un nombre o apellido..." />
             <label for="filtro" class="form-label">Buscar:</label>
-      </div>
-
+        </div>
         <span class="input-group-text">
-            <span @onclick="BuscarClientes" class="btn btn-info">Buscar</span>
-            </span>
+            <button @onclick="BuscarClientes" class="btn btn-info">Buscar</button>
+        </span>
     </div>
-    
-    
 </div>
+
+<!-- Botón para agregar nuevo cliente -->
+<button disabled="@(MostrarFormulario)" class="btn btn-success mb-3" @onclick="AgregarCliente">Agregar Cliente</button>
 
 <!-- Tabla de clientes -->
 <table class="table table-striped">
@@ -57,36 +57,41 @@
 </table>
 
 <!-- Formulario para crear/editar cliente -->
-<div>
-    <h4>@(ClienteSeleccionado.Id == 0 ? "Crear Cliente" : "Editar Cliente")</h4>
-    <EditForm Model="ClienteSeleccionado" OnValidSubmit="GuardarCliente">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+@if (MostrarFormulario)
+{
+    <div>
+        <h4>@(ClienteSeleccionado.Id == 0 ? "Crear Cliente" : "Editar Cliente")</h4>
+        <EditForm Model="ClienteSeleccionado" OnValidSubmit="GuardarCliente">
+            <DataAnnotationsValidator />
 
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input id="nombre" class="form-control" @bind="ClienteSeleccionado.Nombre" />
-        </div>
-        <div class="mb-3">
-            <label for="apellido" class="form-label">Apellido</label>
-            <input id="apellido" class="form-control" @bind="ClienteSeleccionado.Apellido" />
-        </div>
-        <div class="mb-3">
-            <label for="telefono" class="form-label">Teléfono</label>
-            <input id="telefono" type="tel" class="form-control" @bind="ClienteSeleccionado.Telefono" />
-        </div>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input id="nombre" class="form-control" @bind="ClienteSeleccionado.Nombre" />
+                <ValidationMessage For="@(() => ClienteSeleccionado.Nombre)" />
+            </div>
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input id="apellido" class="form-control" @bind="ClienteSeleccionado.Apellido" />
+                <ValidationMessage For="@(() => ClienteSeleccionado.Apellido)" />
+            </div>
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input id="telefono" type="tel" class="form-control" @bind="ClienteSeleccionado.Telefono" />
+                <ValidationMessage For="@(() => ClienteSeleccionado.Telefono)" />
+            </div>
 
-        <button type="submit" class="btn btn-success">Guardar</button>
-        <button type="button" class="btn btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
-    </EditForm>
-</div>
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <button type="button" class="btn btn-secondary" @onclick="CancelarEdicion">Cancelar</button>
+        </EditForm>
+    </div>
+}
 
 @code {
     // Propiedades
     private string Filtro { get; set; } = string.Empty;
     private List<ClienteDto> Clientes { get; set; } = new();
     private ClienteRequestDto ClienteSeleccionado { get; set; } = new();
-
+    private bool MostrarFormulario { get; set; } = false;
 
     // Cargar la lista inicial de clientes
     protected override async Task OnInitializedAsync()
@@ -101,6 +106,12 @@
         StateHasChanged();
     }
 
+    private void AgregarCliente()
+    {
+        ClienteSeleccionado = new ClienteRequestDto();
+        MostrarFormulario = true;
+    }
+
     private void EditarCliente(ClienteDto cliente)
     {
         ClienteSeleccionado = new ClienteRequestDto
@@ -110,6 +121,7 @@
                 Apellido = cliente.Apellido,
                 Telefono = cliente.Telefono
             };
+        MostrarFormulario = true;
     }
 
     private async Task GuardarCliente()
@@ -117,12 +129,10 @@
         if (ClienteSeleccionado.Id == 0)
         {
             await ClienteBussines.Crear(ClienteSeleccionado);
-            StateHasChanged();
         }
         else
         {
             await ClienteBussines.Update(ClienteSeleccionado);
-            StateHasChanged();
         }
 
         await BuscarClientes();
@@ -132,7 +142,8 @@
     private async Task EliminarCliente(int id)
     {
         var result = await ClienteBussines.Eliminar(id);
-        if (result){
+        if (result)
+        {
             await BuscarClientes();
         }
     }
@@ -140,6 +151,6 @@
     private void CancelarEdicion()
     {
         ClienteSeleccionado = new ClienteRequestDto();
-        StateHasChanged();
+        MostrarFormulario = false;
     }
 }
