@@ -4,7 +4,7 @@
 
 @if (HttpContext is null)
 {
-    <p>Loading...</p>
+    <p>Cargando...</p>
 }
 else
 {
@@ -19,9 +19,9 @@ else
     {
         if (HttpContext is null)
         {
-            // If this code runs, we're currently rendering in interactive mode, so there is no HttpContext.
-            // The identity pages need to set cookies, so they require an HttpContext. To achieve this we
-            // must transition back from interactive mode to a server-rendered page.
+            // Si este código se ejecuta, estamos renderizando actualmente en modo interactivo, por lo que no hay HttpContext.
+            // Las páginas de identidad necesitan configurar cookies, por lo que requieren un HttpContext. Para lograr esto,
+            // debemos hacer la transición del modo interactivo a una página renderizada por el servidor.
             NavigationManager.Refresh(forceReload: true);
         }
     }

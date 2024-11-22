@@ -1,21 +1,43 @@
 using APP2024P4.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Logging;
 
-namespace APP2024P4.Components.Account
+namespace APP2024P4.Components.Account;
+
+/// <summary>
+/// Este servicio no envía correos reales. Se utiliza solo para pruebas y desarrollo local.
+/// Implementar un servicio real antes de desplegar en producción.
+/// </summary>
+[Obsolete("Implementa un servicio real de envío de correos para producción.")]
+internal sealed class IdentityNoOpEmailSender : IEmailSender<ApplicationUser>
 {
-    // Remove the "else if (EmailSender is IdentityNoOpEmailSender)" block from RegisterConfirmation.razor after updating with a real implementation.
-    internal sealed class IdentityNoOpEmailSender : IEmailSender<ApplicationUser>
+    private readonly IEmailSender emailSender = new NoOpEmailSender();
+    private readonly ILogger<IdentityNoOpEmailSender> logger;
+
+    public IdentityNoOpEmailSender(ILogger<IdentityNoOpEmailSender> logger)
     {
-        private readonly IEmailSender emailSender = new NoOpEmailSender();
+        this.logger = logger;
+    }
 
-        public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) =>
-            emailSender.SendEmailAsync(email, "Confirm your email", $"Please confirm your account by <a href='{confirmationLink}'>clicking here</a>.");
+    public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
+    {
+        logger.LogInformation("Enviando correo de confirmación a {Email} con enlace: {Link}", email, confirmationLink);
+        return emailSender.SendEmailAsync(email, "Confirma tu correo",
+            $"Por favor, confirma tu cuenta haciendo clic en este enlace: <a href='{confirmationLink}'>Confirmar cuenta</a>.");
+    }
 
-        public Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink) =>
-            emailSender.SendEmailAsync(email, "Reset your password", $"Please reset your password by <a href='{resetLink}'>clicking here</a>.");
+    public Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink)
+    {
+        logger.LogInformation("Enviando correo de restablecimiento de contraseña a {Email} con enlace: {Link}", email, resetLink);
+        return emailSender.SendEmailAsync(email, "Restablece tu contraseña",
+            $"Por favor, restablece tu contraseña haciendo clic en este enlace: <a href='{resetLink}'>Restablecer contraseña</a>.");
+    }
 
-        public Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode) =>
-            emailSender.SendEmailAsync(email, "Reset your password", $"Please reset your password using the following code: {resetCode}");
+    public Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode)
+    {
+        logger.LogInformation("Enviando código de restablecimiento de contraseña a {Email} con código: {Code}", email, resetCode);
+        return emailSender.SendEmailAsync(email, "Código de restablecimiento de contraseña",
+            $"Por favor, utiliza el siguiente código para restablecer tu contraseña: {resetCode}");
     }
 }

@@ -5,16 +5,15 @@
 
 <!-- Buscador -->
 <div class="mb-3">
-    <div class="input-group has-validation">
-        <div class="form-floating is-invalid">
+    <div class="input-group">
+        <div class="form-floating flex-grow-1">
             <input id="filtro" class="form-control" @bind="Filtro" placeholder="Ingrese un nombre o apellido..." />
             <label for="filtro" class="form-label">Buscar:</label>
         </div>
-        <span class="input-group-text">
-            <button @onclick="BuscarClientes" class="btn btn-info">Buscar</button>
-        </span>
+        <button @onclick="BuscarClientes" class="btn btn-info">Buscar</button>
     </div>
 </div>
+
 
 <!-- Botón para agregar nuevo cliente -->
 <button disabled="@(MostrarFormulario)" class="btn btn-success mb-3" @onclick="AgregarCliente">Agregar Cliente</button>
@@ -23,7 +22,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Id</th>
+            <th>Código</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Teléfono</th>
