@@ -1,6 +1,8 @@
 using APP2024P4.Components;
 using APP2024P4.Components.Account;
 using APP2024P4.Data;
+using APP2024P4.Data.Bussiness;
+using APP2024P4.Data.Repositories;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,16 +26,27 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<IApplicationDbContext,ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddScoped<IApplicationDbContext, ApplicationDbContext>();//Tiempo de vida util de la base de datos
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
-
+#region Agregar Servicios Adicionales
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+#endregion Agregar Servicios Adicionales
+
+#region Repositorios o capas de acceso a base de datos
+builder.Services.AddScoped<IClientesRepository, ClientesRepository>();
+#endregion Repositorios o capas de acceso a base de datos
+
+#region Capa de lógica de negocio
+builder.Services.AddScoped<IClientesBussiness, ClientesBussiness>();
+#endregion Capa de lógica de negocio
 
 var app = builder.Build();
 
