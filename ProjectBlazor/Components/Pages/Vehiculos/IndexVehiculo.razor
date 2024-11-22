@@ -104,8 +104,11 @@
 }
 else
 {
+	
 	@if (VehiculoList != null && ShowForm==false)
 	{
+		
+
 		@if (VehiculoList.Count > 0)
 		{
 			<div class="container flex-column ">
@@ -135,8 +138,20 @@ else
 				}
 			</div>
 		}
+		else 
+		{
+			<div class="mb-3 mt-3 align-content-center text-center">
+				<label class="align-text-top">No hay vehiculos registrados</label>
+			</div>
+			<div class="mb-3 mt-3 align-content-center text-center">
+				<span class="btn btn-primary align-content-end mt-3 mb-3" @onclick="btnAgregarClick">+</span>
+			</div>
+
+		}
 	}
 }
+
+
 
 
 
